@@ -1,6 +1,6 @@
 # A Simple Network Monitor
 
-这是一个简单的网络监视器——悬浮窗
+这是一个简单的网络监视器 —— 悬浮窗
 
 
 一个用Python编写的简单网络监控工具，显示实时下载速度↓和本次开机以用流量数量↓↓，该工具使用“Tkinter”作为图形用户界面(GUI)，使用“psutil”获取网络统计数据，使用“pystray”进行系统托盘集成。
@@ -26,8 +26,8 @@ python3 app.py
 ```
  - 运行后可自由拖动更改位置。
 
-## releases
- - 前往releases页面下载可执行程序，同时保证icon.ico位于可执行程序同一目录。
+## Releases
+ - 前往 [Releases](https://github.com/czheisenberg/A-SimpleNetworkMonitor/releases/tag/0.1)  页面下载可执行程序，同时确保icon.ico在可执行程序的同一目录下。
 ![](./images/3.png)
 
 ## 效果
