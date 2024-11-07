@@ -84,6 +84,7 @@ class NetworkMonitorApp:
         self.prev_counters = counters
 
         # 更新 Tkinter 显示的数据
+        self.upload_speed.set(f"↑: {sent_speed:.2f} MB/s")
         self.download_speed.set(f"↓: {recv_speed:.2f} MB/s")
         self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
         self.total_sent.set(f"↑↑: {sent / 1024 / 1024:.2f} MB")
