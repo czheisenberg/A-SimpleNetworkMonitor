@@ -88,7 +88,6 @@ class NetworkMonitorApp:
         self.download_speed.set(f"↓: {recv_speed:.2f} MB/s")
         self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
         self.total_sent.set(f"↑↑: {sent / 1024 / 1024:.2f} MB")
-        self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
 
         # 每秒更新一次
         self.root.after(1000, self.update_network_data)
