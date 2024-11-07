@@ -18,10 +18,10 @@ class NetworkMonitorApp:
         self.root.wm_attributes('-alpha', 0.6) # 设置半透明 0 - 1
 
         # 初始化上传和下载数据
-        self.upload_speed = tk.StringVar(value="↑: 0 MB/s")
-        self.download_speed = tk.StringVar(value="↓: 0 MB/s")
-        self.total_sent = tk.StringVar(value="↑↑: 0 MB")
-        self.total_received = tk.StringVar(value="↓↓: 0 MB")
+        self.upload_speed = tk.StringVar(value="↑: 0 MB/s") # 上传速度
+        self.download_speed = tk.StringVar(value="↓: 0 MB/s")   # 下载速度
+        self.total_sent = tk.StringVar(value="↑↑: 0 MB")    # 上传总量
+        self.total_received = tk.StringVar(value="↓↓: 0 MB") # 下载总量
 
         # 初始化是否置顶状态
         self.is_topmost = tk.BooleanVar(value=False)
@@ -85,6 +85,8 @@ class NetworkMonitorApp:
 
         # 更新 Tkinter 显示的数据
         self.download_speed.set(f"↓: {recv_speed:.2f} MB/s")
+        self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
+        self.total_sent.set(f"↑↑: {sent / 1024 / 1024:.2f} MB")
         self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
 
         # 每秒更新一次
