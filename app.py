@@ -12,16 +12,15 @@ class NetworkMonitorApp:
         self.root.title("traffic")
         #self.root.geometry("157x28")  # 增加窗口宽度，适应并排显示
         
-        # 去除最大化和最小化按钮
         root.overrideredirect(True)  # 去掉标题栏和边框
         self.root.attributes('-topmost', True)  # 默认置顶屏幕
 
-        self.root.wm_attributes('-alpha', 0.5) # 设置半透明 0 - 1
+        self.root.wm_attributes('-alpha', 0.6) # 设置半透明 0 - 1
 
         # 初始化上传和下载数据
-        self.upload_speed = tk.StringVar(value="Upload Speed: 0 MB/s")
+        self.upload_speed = tk.StringVar(value="↑: 0 MB/s")
         self.download_speed = tk.StringVar(value="↓: 0 MB/s")
-        self.total_sent = tk.StringVar(value="↑: 0 MB")
+        self.total_sent = tk.StringVar(value="↑↑: 0 MB")
         self.total_received = tk.StringVar(value="↓↓: 0 MB")
 
         # 初始化是否置顶状态
@@ -48,13 +47,25 @@ class NetworkMonitorApp:
         frame = ttk.Frame(self.root)
         frame.pack(fill=tk.BOTH, expand=True)
 
+        # 上传速度显示
+        upload_label = ttk.Label(frame, textvariable=self.upload_speed, font=("Arial", 8), foreground="blue")
+        upload_label.grid(row=0, column=0, padx=5, pady=2, sticky="w")
+
+        # 上传总量显示
+        total_sent_label = ttk.Label(frame, textvariable=self.total_sent, font=("Arial", 8), foreground="purple")
+        total_sent_label.grid(row=0, column=1, padx=5, pady=2, sticky="w")
+
         # 下载速度显示 (并排显示)
-        download_label = ttk.Label(frame, textvariable=self.download_speed, font=("Arial", 8))
-        download_label.pack(side=tk.LEFT, padx=5)
+        download_label = ttk.Label(frame, textvariable=self.download_speed, font=("Arial", 8), foreground="green")
+        download_label.grid(row=1, column=0, padx=5, pady=2, sticky="w")
 
         # 总接收量显示 (并排显示)
-        total_received_label = ttk.Label(frame, textvariable=self.total_received, font=("Arial", 8))
-        total_received_label.pack(side=tk.LEFT, padx=5)
+        total_received_label = ttk.Label(frame, textvariable=self.total_received, font=("Arial", 8), foreground="black")
+        total_received_label.grid(row=1, column=1, padx=5, pady=2, sticky="e")
+
+        # 列宽相同
+        frame.columnconfigure(0, weight=1)
+        frame.columnconfigure(1, weight=1)
 
     def update_network_data(self):
         if not self.running:
