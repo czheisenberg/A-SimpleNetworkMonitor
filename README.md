@@ -57,7 +57,7 @@ python3 app.py
 ## v0.3
  - 新增可自定义设置是否显示：实时下载速度，实时上传速度，下载总量，上传总量以及自定义透明度。
  - 右键系统托盘中图标点击 Edit
-![](./images/show-quit.png)
+![](./images/v0.3-Edit.png)
  - 点击 Edit 后弹出 编辑界面
 ![](./images/v0.3-Edit-main.png)
  - 此时可根据需要进行调整。
