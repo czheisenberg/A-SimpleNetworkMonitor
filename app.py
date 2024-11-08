@@ -1,6 +1,6 @@
 import psutil
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, Toplevel, Text, Checkbutton, PhotoImage
 from threading import Thread
 import pystray
 from PIL import Image, ImageDraw
@@ -15,7 +15,9 @@ class NetworkMonitorApp:
         root.overrideredirect(True)  # 去掉标题栏和边框
         self.root.attributes('-topmost', True)  # 默认置顶屏幕
 
-        self.root.wm_attributes('-alpha', 0.6) # 设置半透明 0 - 1
+        # 透明度
+        self.opacity = tk.DoubleVar(value=0.6)
+        self.root.wm_attributes('-alpha', self.opacity.get()) # 设置半透明 0 - 1
 
         # 初始化上传和下载数据
         self.upload_speed = tk.StringVar(value="↑: 0 MB/s") # 上传速度
@@ -25,6 +27,12 @@ class NetworkMonitorApp:
 
         # 初始化是否置顶状态
         self.is_topmost = tk.BooleanVar(value=False)
+
+        # 选项状态（是否显示各项内容）
+        self.show_download_speed = tk.BooleanVar(value=True)
+        self.show_upload_speed = tk.BooleanVar(value=True)
+        self.show_total_received = tk.BooleanVar(value=True)
+        self.show_total_sent = tk.BooleanVar(value=True)
 
         # 设置 GUI 元素
         self.setup_ui()
@@ -84,10 +92,30 @@ class NetworkMonitorApp:
         self.prev_counters = counters
 
         # 更新 Tkinter 显示的数据
-        self.upload_speed.set(f"↑: {sent_speed:.2f} MB/s")
-        self.download_speed.set(f"↓: {recv_speed:.2f} MB/s")
-        self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
-        self.total_sent.set(f"↑↑: {sent / 1024 / 1024:.2f} MB")
+        # self.upload_speed.set(f"↑: {sent_speed:.2f} MB/s")
+        # self.download_speed.set(f"↓: {recv_speed:.2f} MB/s")
+        # self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
+        # self.total_sent.set(f"↑↑: {sent / 1024 / 1024:.2f} MB")
+        # 更新 Tkinter 显示的数据，根据复选框状态控制显示
+        if self.show_upload_speed.get():
+            self.upload_speed.set(f"↑: {sent_speed:.2f} MB/s")
+        else:
+            self.upload_speed.set("")
+
+        if self.show_download_speed.get():
+            self.download_speed.set(f"↓: {recv_speed:.2f} MB/s")
+        else:
+            self.download_speed.set("")
+
+        if self.show_total_sent.get():
+            self.total_sent.set(f"↑↑: {sent / 1024 / 1024:.2f} MB")
+        else:
+            self.total_sent.set("")
+
+        if self.show_total_received.get():
+            self.total_received.set(f"↓↓: {recv / 1024 / 1024:.2f} MB")
+        else:
+            self.total_received.set("")
 
         # 每秒更新一次
         self.root.after(1000, self.update_network_data)
@@ -102,6 +130,7 @@ class NetworkMonitorApp:
 
         # 创建托盘菜单
         menu = pystray.Menu(
+            item('Edit', lambda icon, item: self.show_editor()),
             item('Show', lambda icon, item: self.show_window()),
             item('Quit', lambda icon, item: self.quit_application())
         )
@@ -119,6 +148,34 @@ class NetworkMonitorApp:
     def show_window(self):
         # 显示窗口
         self.root.deiconify()
+    
+    def show_editor(self):
+        # 显示编辑窗口
+        editor_window = Toplevel(self.root)
+        editor_window.title("编辑")
+        editor_window.geometry("300x200")
+
+        # 编辑窗口标题栏图标
+        icno_image = PhotoImage(file="icon.ico")
+        editor_window.iconphoto(True, icno_image)
+
+        # 添加滑块来调整透明度
+        ttk.Label(editor_window, text="设置透明度:").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+        opacity_scale = ttk.Scale(
+            editor_window, from_=0.1, to=1.0, variable=self.opacity,
+            orient="horizontal", command=self.adjust_opacity
+        )
+        opacity_scale.grid(row=0, column=1, padx=10, pady=5, sticky="w")
+
+         # 添加复选框
+        ttk.Checkbutton(editor_window, text="显示实时下载速度", variable=self.show_download_speed).grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        ttk.Checkbutton(editor_window, text="显示实时上传速度", variable=self.show_upload_speed).grid(row=1, column=1, padx=10, pady=5, sticky="e")
+        ttk.Checkbutton(editor_window, text="显示下载总量", variable=self.show_total_received).grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        ttk.Checkbutton(editor_window, text="显示上传总量", variable=self.show_total_sent).grid(row=2, column=1, padx=10, pady=5, sticky="w")
+        
+
+    def adjust_opacity(self, value):
+        self.root.attributes('-alpha', float(value))
 
     def quit_application(self):
         # 停止更新并退出应用
